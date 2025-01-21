@@ -35,6 +35,9 @@ def main():
         for i in updatable:
             i.update(dt)
         
+        for i in asteroids:
+            i.collision(player)
+
         screen.fill(BLACK)
 
         for i in drawable:
