@@ -11,7 +11,7 @@ def main():
     pygame.init()
     
     default_font = pygame.font.Font(None, 72)  # should load data like fonts only once
-    text_surface = default_font.render(f"{PLAYER_SPEED}", True, pygame.Color('#FFFFFF'))
+    #text_surface = default_font.render(f"{player.get_speed()}", True, pygame.Color('#FFFFFF'))
     text_position = (0, 0)                 # where the text is going to be drawn
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -56,6 +56,7 @@ def main():
                     i.split()
 
         screen.fill(BLACK)
+        text_surface = default_font.render(f"{player.get_speed():.2f}", True, pygame.Color('#FFFFFF'))
         screen.blit(text_surface, text_position)
 
         for i in drawable:

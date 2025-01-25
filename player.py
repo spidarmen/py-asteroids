@@ -41,9 +41,9 @@ class Player(CircleShape):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w] and not self.get_speed() >= PLAYER_SPEED_LIMIT:
             self.velocity += forward * PLAYER_SPEED * dt
-        elif keys[pygame.K_s]:
+        elif keys[pygame.K_s] and not self.get_speed() >= PLAYER_SPEED_LIMIT:
             self.velocity -= forward * PLAYER_SPEED * dt
 
         if self.position.x >= SCREEN_WIDTH:
@@ -59,9 +59,13 @@ class Player(CircleShape):
         self.velocity *= pow(PLAYER_DRAG, dt)        
         self.position += self.velocity * dt
 
+    def get_speed(self):
+        return self.velocity.length()
+
     def shoot(self):
         if self.shot_cooldown > 0:
             return
         self.shot_cooldown = PLAYER_SHOOT_COOLDOWN
         shot = Shot(self.position.x, self.position.y)
         shot.velocity = pygame.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+
