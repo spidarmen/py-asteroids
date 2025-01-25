@@ -4,11 +4,10 @@ from shot import Shot
 
 class Player(CircleShape):
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        super().__init__(self.x, self.y, PLAYER_RADIUS)
+        super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shot_cooldown = 0
+        self.velocity = pygame.Vector2(0, 0)
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -29,20 +28,36 @@ class Player(CircleShape):
         self.shot_cooldown -= dt
         keys = pygame.key.get_pressed()
 
+        self.move(dt)
+
         if keys[pygame.K_a]:
             self.rotate(-dt)
         if keys[pygame.K_d]:
             self.rotate(dt)
-        if keys[pygame.K_w]:
-            self.move(dt)
-        if keys[pygame.K_s]:
-            self.move(-dt)
         if keys[pygame.K_SPACE]:
             self.shoot()
     
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        self.position += forward * PLAYER_SPEED * dt
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_w]:
+            self.velocity += forward * PLAYER_SPEED * dt
+        elif keys[pygame.K_s]:
+            self.velocity -= forward * PLAYER_SPEED * dt
+
+        if self.position.x >= SCREEN_WIDTH:
+            self.position.x = 0
+        elif self.position.x <= 0:
+            self.position.x = SCREEN_WIDTH
+        
+        if self.position.y >= SCREEN_HEIGHT:
+            self.position.y = 0
+        elif self.position.y <= 0:
+            self.position.y = SCREEN_HEIGHT
+                
+        self.velocity *= pow(PLAYER_DRAG, dt)        
+        self.position += self.velocity * dt
 
     def shoot(self):
         if self.shot_cooldown > 0:
