@@ -8,6 +8,9 @@ class Player(CircleShape):
         self.rotation = 0
         self.shot_cooldown = 0
         self.velocity = pygame.Vector2(0, 0)
+        self.player_color = WHITE
+        self.damage_timer = 0
+        self.is_damaged = False
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -19,13 +22,14 @@ class Player(CircleShape):
     
     def draw(self, screen):
         # override from parent class
-        pygame.draw.polygon(screen, (255,0,0), self.triangle(),2)
+        pygame.draw.polygon(screen, self.player_color, self.triangle(),2)
 
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt
 
     def update(self, dt):
         self.shot_cooldown -= dt
+        self.damage_timer += dt
         keys = pygame.key.get_pressed()
 
         self.move(dt)
@@ -36,6 +40,13 @@ class Player(CircleShape):
             self.rotate(dt)
         if keys[pygame.K_SPACE]:
             self.shoot()
+
+        if self.is_damaged:
+            self.damage_timer += dt
+        
+            if self.damage_timer >= DAMAGE_DURATION:
+                self.is_damaged = False
+                self.player_color = WHITE
     
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -68,4 +79,18 @@ class Player(CircleShape):
         self.shot_cooldown = PLAYER_SHOOT_COOLDOWN
         shot = Shot(self.position.x, self.position.y)
         shot.velocity = pygame.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+
+    def damaged(self, dt):
+
+        if not self.is_damaged:
+            self.is_damaged = True
+            self.damage_timer = 0
+            self.player_color = RED
+    
+        if self.is_damaged:
+            self.damage_timer += dt
+        
+            if self.damage_timer >= DAMAGE_DURATION:
+                self.is_damaged = False
+                self.player_color = WHITE
 

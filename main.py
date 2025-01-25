@@ -8,11 +8,10 @@ from shot import Shot
 def main():
     print("Starting asteroids!")
 
-    pygame.init()
-    
+    pygame.init()    
     default_font = pygame.font.Font(None, 72)  # should load data like fonts only once
     #text_surface = default_font.render(f"{player.get_speed()}", True, pygame.Color('#FFFFFF'))
-    text_position = (0, 0)                 # where the text is going to be drawn
+    text_position = (0, 0)  # where the text is going to be drawn
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Asteroids")
@@ -33,8 +32,7 @@ def main():
     Player.containers = (updatable, drawable)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
-    BLACK = (0, 0, 0)
-    dt    = 0
+    dt = 0
 
     while True:
         for event in pygame.event.get():
@@ -47,8 +45,7 @@ def main():
         
         for i in asteroids:
             if i.collides_with(player):
-                print("Game over!")
-                #sys.exit()
+                player.damaged(dt)
 
             for shot in shots:
                 if i.collides_with(shot):
@@ -56,7 +53,7 @@ def main():
                     i.split()
 
         screen.fill(BLACK)
-        text_surface = default_font.render(f"{player.get_speed():.2f}", True, pygame.Color('#FFFFFF'))
+        text_surface = default_font.render(f"SPEED: {int(player.get_speed())}", True, pygame.Color('#FFFFFF'))
         screen.blit(text_surface, text_position)
 
         for i in drawable:
