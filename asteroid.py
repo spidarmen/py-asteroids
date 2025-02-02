@@ -24,7 +24,7 @@ class Asteroid(CircleShape):
         if self.radius <= ASTEROID_MIN_RADIUS:
             return
 
-        spawn_angle = random.uniform(20, 50)
+        spawn_angle = random.uniform(20, 90)
         child_1 = self.velocity.rotate(spawn_angle)
         child_2 = self.velocity.rotate(-spawn_angle)
         new_radius = self.radius - ASTEROID_MIN_RADIUS

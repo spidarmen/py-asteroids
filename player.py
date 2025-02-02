@@ -5,12 +5,14 @@ from shot import Shot
 class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
-        self.rotation = 0
+        self.rotation      = 0
         self.shot_cooldown = 0
+        self.damage_timer  = 0
+        self.trail_timer   = 0
         self.velocity = pygame.Vector2(0, 0)
         self.player_color = WHITE
-        self.damage_timer = 0
         self.is_damaged = False
+        
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -30,9 +32,8 @@ class Player(CircleShape):
     def update(self, dt):
         self.shot_cooldown -= dt
         self.damage_timer += dt
-        keys = pygame.key.get_pressed()
-
         self.move(dt)
+        keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
             self.rotate(-dt)
